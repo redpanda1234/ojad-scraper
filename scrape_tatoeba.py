@@ -21,24 +21,6 @@ import pandas as pd
 from ingest_data import clean_word
 
 
-def init_browser():
-    firefox_dev_binary = FirefoxBinary("/usr/bin/firefox-developer-edition")
-
-    fp = webdriver.FirefoxProfile()
-
-    options = Options()
-    options.add_argument("--headless")
-
-    browser = webdriver.Firefox(
-        firefox_binary=firefox_dev_binary,
-        executable_path="./geckodriver",
-        firefox_profile=fp,
-        options=options,
-    )
-
-    return browser
-
-
 def query_tatoeba(browser, word):
     prefix = r"https://tatoeba.org/en/sentences/search?from=jpn&has_audio=yes&native=&orphans=no&query="
     suffix = r"&sort=relevance&sort_reverse=&tags=&to=eng&trans_filter=limit&trans_has_audio=&trans_link=&trans_orphan=&trans_to=&trans_unapproved=&trans_user=&unapproved=no&user="
@@ -79,7 +61,7 @@ def get_ii_rei(browser, kanji_string, lesson, timeout=5):
     pathlib.Path(lesson_path).mkdir(parents=True, exist_ok=True)
     local_audio_path = f"{lesson_path}/{kanji_string}.mp3"
 
-    subprocess.run(["curl", "-L", audio_url, "--output", local_audio_path])
+    subprocess.run(["curl", "-s", "-L", audio_url, "--output", local_audio_path])
 
     # request pitch analysis
     wait_for_element(
@@ -105,25 +87,31 @@ def get_ii_rei(browser, kanji_string, lesson, timeout=5):
 #     return word_dict
 
 
-def nt_words_rei(browser, words, timeout=5):
+def nt_words_rei(browser, words, timeout=15):
     """
     This one expects "words" to be a collection of named tuples
     """
     word_dict = {}
     for word in tqdm(words):
-        if not pd.isna(word.kanji):
-            word_data = get_ii_rei(browser, word.kanji, word.lesson, timeout=timeout)
-        elif not pd.isna(word.kana):
-            word_data = get_ii_rei(browser, word.kana, word.lesson, timeout=timeout)
-        else:
-            assert False
+        try:
+            if not pd.isna(word.kanji):
+                word_data = get_ii_rei(
+                    browser, word.kanji, word.lesson, timeout=timeout
+                )
+            elif not pd.isna(word.kana):
+                word_data = get_ii_rei(browser, word.kana, word.lesson, timeout=timeout)
+            else:
+                assert False
+            local_audio_path, transcript = word_data
 
-        local_audio_path, transcript = word_data
+        except:  # timeout
+            local_audio_path = ""
+            transcript = ""
 
         word_dict[word] = {"audio path": local_audio_path, "transcript": transcript}
 
         # word_data.screenshot("/tmp/" + word + ".png")
         # word_dict[word] = word_data
-        sleep(5 * random.uniform(0, 1))  # Not sure if they'll like ban
+        # sleep(5 * random.uniform(0, 1))  # Not sure if they'll like ban
         # me or something if I query their website too much
     return word_dict

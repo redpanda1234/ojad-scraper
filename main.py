@@ -19,6 +19,8 @@ from ingest_data import *
 from scrape_tatoeba import *
 from genanki_templates import *
 
+import pickle
+
 
 def init_browser():
     firefox_dev_binary = FirefoxBinary("/usr/bin/firefox-developer-edition")
@@ -50,7 +52,7 @@ def open_ojad():
     return browser
 
 
-def wait_for_element(browser, By_what, trigger_string, kanji_string, timeout=5):
+def wait_for_element(browser, By_what, trigger_string, kanji_string, timeout=15):
     try:
         element_loaded = EC.presence_of_element_located((By_what, trigger_string))
         WebDriverWait(browser, timeout).until(element_loaded)
@@ -140,15 +142,14 @@ def merge_dicts(dict1, dict2):
 
 
 def main():
-    browser = open_ojad()
-
     df = get_df()
     lesson_names, tango_by_lesson = get_tango_by_lesson(df)
     anki_ids = get_anki_ids(lesson_names)
 
     # Start with just lesson 1
-    lessons = lesson_names[0:1]
+    lessons = lesson_names[0:35]
     for lesson in lessons:
+        browser = open_ojad()
         print(lesson)
         # lesson number and the section (e.g. 会話１) within that lesson
         try:
@@ -167,6 +168,9 @@ def main():
 
         # merge my stupid dictionaries
         word_data = merge_dicts(pitch_data, rei_data)
+
+        # with open(f"./data/{lesson}.pkl", "wb") as f:
+        #     pickle.dump(word_data, f)
 
         for word in words:
             if not pd.isna(word.kanji):
