@@ -1,0 +1,91 @@
+u {
+  text-decoration-style: wavy;
+  text-underline-position: under;
+  color: white;
+  padding: 1px;
+}
+
+.card {
+  font-family: UD Digi Kyokasho N-R;
+  font-size: 20px;
+  text-align: center;
+  background-color: #fdf8e9;
+  padding: 10px;
+}
+
+.body-upper {
+  font-family: Noto Sans JP Black;
+  font-size: 40px;
+  color: #eee;
+  background-color: #555555;
+  padding: 40px 10px 10px;
+}
+
+.body-lower {
+  text-align: left;
+  color: #555555;
+  background-color: #9fdbdb;
+  padding: 20px;
+}
+
+.level {
+  position: absolute;
+  background-color: #9fdbdb;
+  color: #555555;
+  font-size: 20px;
+  padding: 5px;
+  margin-top: -30px;
+}
+
+.meaning {
+  width: fit-content;
+  font-family: Bree Serif;
+  font-size: 15px;
+  border: 1px solid #555555;
+  padding: 5px;
+  margin-bottom: 15px;
+  max-width: 100%;
+  display: inline-table;
+}
+
+.type {
+  width: fit-content;
+  display: inline-table;
+  border: 1px solid #555555;
+  background-color: #555555;
+  font-family: Bree Serif;
+  font-size: 15px;
+  color: #9fdbdb;
+  padding: 5px;
+  padding-left: 7px;
+}
+
+.soundFront {
+  position: absolute;
+  top: 40px;
+  right: 40px;
+  font-size: 18px;
+  content: url("play.png");
+  width: 6%;
+}
+
+.sentence {
+}
+
+.notes {
+  font-family: Noto Sans JP Regular;
+  font-size: 12px;
+  border: 1px dashed #555555;
+  padding: 10px;
+  margin-top: 20px;
+}
+.phrasing_accent_curve {
+  margin-top: -2em;
+  margin-bottom: 0.25em;
+}
+.phrasing_text {
+  margin-top: -1.25em;
+  margin-left: 1em;
+  margin-bottom: -3.25em;
+  padding-bottom: 3em;
+}

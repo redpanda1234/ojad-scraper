@@ -1,0 +1,14 @@
+<div class="body-upper" style="border-radius: 5px;">
+<div class="level">{{Level}}</div>
+<div id="audio" style="display:none">{{FrontSound}}</div>
+<div class="soundFront" onclick="playAudio()"></div>
+{{textbook_form}}
+</div>
+
+<script>
+    function playAudio(){
+        var audioDiv = document.getElementById('audio');
+        var audio = audioDiv.getElementsByTagName("*");
+        audio[0].click();
+    }
+</script>
