@@ -5,6 +5,18 @@ from functools import cmp_to_key
 from pandas.io import excel
 
 
+def clean_word(word):
+    return (
+        word.replace("～", "")
+        .replace("(", "")
+        .replace(")", "")
+        .replace("…", "")
+        .replace("・", "")
+        .replace("［", "")
+        .replace("］", "")
+    )
+
+
 def get_df():
     """
     read in the vocabulary csv, downloaded from https://ij.japantimes.co.jp/resource/sakuin.jsp
