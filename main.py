@@ -8,10 +8,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 
-from time import sleep
-from tqdm import tqdm as tqdm
-
-from copy import deepcopy
+import genanki
 
 
 def init_browser():
@@ -77,13 +74,19 @@ def query_ojad(browser, kanji_string, timeout=5):
 
 
 def process_words(browser, wordlist, timeout=5):
+    word_dict = {}
     for word in wordlist:
         word_data = query_ojad(browser, word, timeout=timeout)
-        word_data.screenshot("/tmp/" + word + ".png")
-        # word_dict[word] = word_data.get_attribute("outerHTML")
+        # word_data.screenshot("/tmp/" + word + ".png")
+        word_dict[word] = word_data.get_attribute("outerHTML")
+    return word_dict
 
 
 def test():
     browser = open_ojad()
     words = ["ために", "入学試験", "一生けんめい", "将来"]
-    process_words(browser, words)
+    word_dict = process_words(browser, words)
+
+
+def gen_cards():
+    shit_deck = genanki
