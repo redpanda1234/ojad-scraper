@@ -21,7 +21,7 @@ def get_df():
     """
     read in the vocabulary csv, downloaded from https://ij.japantimes.co.jp/resource/sakuin.jsp
     """
-    return pd.read_csv("data/tango.csv")
+    return pd.read_excel("data/tango.ods")
 
 
 def get_tango_by_lesson(df):
@@ -62,7 +62,10 @@ def get_tango_by_lesson(df):
             lesson_names.add(lesson)
             # lesson number, and the subsection within that lesson
             # number
-            lnum, lsec = lesson.split("-")
+            try:
+                lnum, lsec = lesson.split("-")
+            except ValueError:
+                print(word)
             if lnum not in tango_by_lesson:
                 tango_by_lesson[lnum] = {}
             if lsec not in tango_by_lesson[lnum]:

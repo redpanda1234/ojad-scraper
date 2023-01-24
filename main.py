@@ -16,6 +16,7 @@ import re
 import genanki
 
 from ingest_data import *
+from scrape_tatoeba import *
 from genanki_templates import *
 
 
@@ -92,7 +93,7 @@ def query_ojad(browser, kanji_string, timeout=5):
 #     return word_dict
 
 
-def process_nt_words(browser, words, timeout=5):
+def nt_words_pitch(browser, words, timeout=5):
     """
     This one expects "words" to be a collection of named tuples
     """
@@ -138,17 +139,30 @@ def main():
     anki_ids = get_anki_ids(lesson_names)
 
     # Start with just lesson 1
-    lessons = lesson_names[0:30]
+    lessons = lesson_names[0:1]
     for lesson in lessons:
         print(lesson)
         # lesson number and the section (e.g. 会話１) within that lesson
-        lnum, lsec = lesson.split("-")
+        try:
+            lnum, lsec = lesson.split("-")
+        except ValueError:
+            print(lesson)
         lesson_deck_id = anki_ids[lesson]
         lesson_deck = genanki.Deck(lesson_deck_id, f"Automated-OJAD::{lnum}::{lsec}")
 
         words = tango_by_lesson[lnum][lsec]
 
-        word_data = process_nt_words(browser, words)
+        print("fetching pitch data...")
+        pitch_data = nt_words_pitch(browser, words)
+        print("fetching example data...")
+        rei_data = nt_words_rei(browser, words)
+
+        # merge my stupid dictionaries
+        word_data = {}
+        for word in words:
+            word_data[word] = pitch_data | rei_data
+            print(word_data[word])
+
         for word in words:
             if not pd.isna(word.kanji):
                 reading = word.kanji
@@ -157,9 +171,11 @@ def main():
             else:
                 assert False
 
-            pitch_reading, pitch_curve_data = (
+            pitch_reading, pitch_curve_data, audio_path, transcript = (
                 word_data[word]["pitch reading"],
                 word_data[word]["pitch curve data"],
+                word_data[word]["audio path"],
+                word_data[word]["transcript"],
             )
             # print(pitch_reading)
 
@@ -168,14 +184,14 @@ def main():
                 fields=[
                     reading,
                     word.english,
-                    "",  # example sentence support might come later
+                    transcript,  # example sentence
                     "",  # kanji meaning support might come later
                     "",  # part of speech support might come later
                     pitch_curve_data,  # pitch curve data
                     pitch_reading,  # pitch curve reading
                     "",  # special notes
                     lesson,
-                    "",  # sentence sound
+                    f"[sound:{audio_path}]",  # example sentence audio
                     "",  # front sound
                 ],
             )
