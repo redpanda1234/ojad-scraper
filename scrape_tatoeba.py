@@ -15,6 +15,7 @@ import re
 
 
 import subprocess
+import pathlib
 import pandas as pd
 
 from ingest_data import clean_word
@@ -72,9 +73,11 @@ def get_ii_rei(browser, kanji_string, lesson, timeout=5):
         By.XPATH, "//*[contains(@href, 'tatoeba.org/en/audio/download')]"
     ).get_attribute("href")
 
-    subprocess.run(["mkdir", "-p", f"./audio/{lesson}"])
-    local_audio_path = "./audio/{lesson}/{kanji_string}.mp3"  # should tag these
-    # with lesson number etc. and add unique numbering
+    lesson_path = (
+        f"/home/fkobayashi/.local/share/Anki2/User 1/collection.media/audio/{lesson}"
+    )
+    pathlib.Path(lesson_path).mkdir(parents=True, exist_ok=True)
+    local_audio_path = f"{lesson_path}/{kanji_string}.mp3"
 
     subprocess.run(["curl", "-L", audio_url, "--output", local_audio_path])
 
@@ -121,6 +124,6 @@ def nt_words_rei(browser, words, timeout=5):
 
         # word_data.screenshot("/tmp/" + word + ".png")
         # word_dict[word] = word_data
-        sleep(1 * random.uniform(0, 1))  # Not sure if they'll like ban
+        sleep(5 * random.uniform(0, 1))  # Not sure if they'll like ban
         # me or something if I query their website too much
     return word_dict

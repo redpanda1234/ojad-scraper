@@ -131,6 +131,14 @@ def nt_words_pitch(browser, words, timeout=5):
     return word_dict
 
 
+def merge_dicts(dict1, dict2):
+    new_dict = {}
+    assert set(dict1.keys()) == set(dict2.keys())
+    for key in dict1:
+        new_dict[key] = dict1[key] | dict2[key]
+    return new_dict
+
+
 def main():
     browser = open_ojad()
 
@@ -158,10 +166,7 @@ def main():
         rei_data = nt_words_rei(browser, words)
 
         # merge my stupid dictionaries
-        word_data = {}
-        for word in words:
-            word_data[word] = pitch_data | rei_data
-            print(word_data[word])
+        word_data = merge_dicts(pitch_data, rei_data)
 
         for word in words:
             if not pd.isna(word.kanji):
