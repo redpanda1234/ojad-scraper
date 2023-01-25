@@ -1,0 +1,28 @@
+
+{{FrontSide}}
+
+<br><hl><br>
+
+<div class="phrasing_phrase_wrapper">
+
+<div class="phrasing_accent_curve">
+
+<div margin="auto">
+<canvas id="#phrase_0_0" width="160" height="100"></canvas>
+
+</div>
+
+</div>
+
+<script type="text/javascript">
+$(function () { set_accent_curve_phrase({{pitch_curve_data}});});
+</script>
+
+<div class="phrasing_text">
+{{pitch_curve_reading}}
+<div class="phrasing_subscript">
+<span>{{pitch_curve_subscript}}</span>
+<span class="inner endspace"><span class="char"></span>
+</span>
+</div>
+</div>

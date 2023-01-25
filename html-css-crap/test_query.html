@@ -1,0 +1,935 @@
+<body id="layout_function">
+  <script type="text/javascript">
+    baseuri = "https://www.gavo.t.u-tokyo.ac.jp/ojad/";
+  </script>
+  <table id="container">
+    <tbody>
+      <tr id="header">
+        <td></td>
+        <td></td>
+      </tr>
+      <tr id="main">
+        <td></td>
+        <td>
+          <div class="flags clearfix">
+            <ul class="flags_ul">
+              <li class="flag_jpn">
+                <a href="/ojad/jpn/phrasing/index"
+                  ><img
+                    src="/ojad/img/flags/jpn.gif"
+                    alt="japan"
+                    width="30px"
+                    height="20px"
+                /></a>
+              </li>
+              <li class="flag_eng">
+                <a href="/ojad/eng/phrasing/index"
+                  ><img
+                    src="/ojad/img/flags/eng.gif"
+                    alt="english"
+                    width="30px"
+                    height="20px"
+                /></a>
+              </li>
+              <li class="flag_idn">
+                <a href="/ojad/idn/phrasing/index"
+                  ><img
+                    src="/ojad/img/flags/idn.gif"
+                    alt="indonesia"
+                    width="30px"
+                    height="20px"
+                /></a>
+              </li>
+              <li class="flag_kor">
+                <a href="/ojad/kor/phrasing/index"
+                  ><img
+                    src="/ojad/img/flags/kor.gif"
+                    alt="korean"
+                    width="30px"
+                    height="20px"
+                /></a>
+              </li>
+              <li class="flag_chi">
+                <a href="/ojad/chi/phrasing/index"
+                  ><img
+                    src="/ojad/img/flags/chi.gif?1"
+                    alt="china"
+                    width="30px"
+                    height="20px"
+                /></a>
+              </li>
+              <li class="flag_chi">
+                <a href="/ojad/zho/phrasing/index"
+                  ><img
+                    src="/ojad/img/flags/zho.gif"
+                    alt="china"
+                    width="30px"
+                    height="20px"
+                /></a>
+              </li>
+              <li class="flag_vie">
+                <a href="/ojad/vie/phrasing/index"
+                  ><img
+                    src="/ojad/img/flags/vie.gif"
+                    alt="vietnamese"
+                    width="30px"
+                    height="20px"
+                /></a>
+              </li>
+              <li class="flag_deu">
+                <a href="/ojad/deu/phrasing/index"
+                  ><img
+                    src="/ojad/img/flags/deu.gif?1"
+                    alt="deutsch"
+                    width="30px"
+                    height="20px"
+                /></a>
+              </li>
+              <li class="flag_rus">
+                <a href="/ojad/rus/phrasing/index"
+                  ><img
+                    src="/ojad/img/flags/rus.gif"
+                    alt="russian"
+                    width="30px"
+                    height="20px"
+                /></a>
+              </li>
+              <li class="flag_tha;">
+                <a href="/ojad/tha/phrasing/index"
+                  ><img
+                    src="/ojad/img/flags/tha.gif"
+                    alt="thailand"
+                    width="30px"
+                    height="20px"
+                /></a>
+              </li>
+              <li class="flag_pol;">
+                <a href="/ojad/pol/phrasing/index"
+                  ><img
+                    src="/ojad/img/flags/pol.png"
+                    alt="polski"
+                    width="30px"
+                    height="20px"
+                /></a>
+              </li>
+              <li class="flag_esp;">
+                <a href="/ojad/esp/phrasing/index"
+                  ><img
+                    src="/ojad/img/flags/esp.png"
+                    alt="spanish"
+                    width="30px"
+                    height="20px"
+                /></a>
+              </li>
+              <li class="flag_swd;">
+                <a href="/ojad/swd/phrasing/index"
+                  ><img
+                    src="/ojad/img/flags/swd.png"
+                    alt="swedish"
+                    width="30px"
+                    height="20px"
+                /></a>
+              </li>
+              <li class="flag_por;">
+                <a href="/ojad/por/phrasing/index"
+                  ><img
+                    src="/ojad/img/flags/bra.png"
+                    alt="swedish"
+                    width="30px"
+                    height="20px"
+                /></a>
+              </li>
+              <li class="flag_swd;">
+                <a href="/ojad/ita/phrasing/index"
+                  ><img
+                    src="/ojad/img/flags/ita.png"
+                    alt="italian"
+                    width="30px"
+                    height="20px"
+                /></a>
+              </li>
+              <li class="flag_fre;">
+                <a href="/ojad/fre/phrasing/index"
+                  ><img
+                    src="/ojad/img/flags/fre.png"
+                    alt="french"
+                    width="30px"
+                    height="20px"
+                /></a>
+              </li>
+            </ul>
+          </div>
+
+          <div id="content" class="phrasing">
+            <div id="phrasing_wrapper">
+              <h2 id="ojad_phrasing_title" class="ojad_title_oval">
+                韻律読み上げチュータ<br />スズキクン
+              </h2>
+
+              <div id="phrasing_condition_wrapper" class="ds">
+                <form
+                  action="/ojad/phrasing/index"
+                  id="PhrasingIndexForm"
+                  method="post"
+                  accept-charset="utf-8"
+                >
+                  <div style="display: none">
+                    <input type="hidden" name="_method" value="POST" />
+                  </div>
+                  <div id="phrasing_conditions">
+                    <div class="phrasing_description_wrapper">
+                      <div class="phrasing_description">
+                        <p class="nml">
+                          フレーズ句切りが行なわれた文に対して，アクセント変形を考慮した上で文としてのピッチパターンを表示します。「，、．。,.？！?!：:」「／/」及び改行がフレーズの句切りとなります。これはユーザが指定します。また「。．.？！?!」と改行が文の句切りとなります。文の句切れは必ずフレーズの句切れとなります。疑問文にも対応しています。OJAD教科書版と異なり，形態素解析，アクセント句境界推定，アクセント核推定などの技術を用いているため，精度は100%ではありませんが，日本語の学習にお役立て下さい。
+                        </p>
+
+                        <p class="nml_allindent">
+                          読み上げ機能の詳細は<a
+                            href="/ojad/pages/using/newsuzuki"
+                            target="_blank"
+                            >こちら</a
+                          >及び，下記の注意事項をご覧下さい。<br />
+                          なおこの機能は， KDDI 研究所の<a
+                            href="http://www.kddilabs.jp/products/audio/n2tts/product.html"
+                            target="_blank"
+                            >研究成果</a
+                          >を用いています。
+                        </p>
+                      </div>
+                    </div>
+                    <div id="phrasing_textarea_wrapper">
+                      <textarea name="data[Phrasing][text]" id="PhrasingText">
+入学試験</textarea
+                      >
+                    </div>
+                    <div class="phrasing_condition_line">
+                      <label for="PhrasingCurve">ピッチパターン</label>
+                      <select name="data[Phrasing][curve]" id="PhrasingCurve">
+                        <option value="nakagawa">
+                          山・丘のみを表現したカーブ
+                        </option>
+                        <option value="norvice">
+                          アクセントを考慮したカーブ(初級者用)
+                        </option>
+                        <option value="advanced" selected="selected">
+                          アクセントを考慮したカーブ(上級者用)
+                        </option>
+                        <option value="invisible">非表示</option>
+                      </select>
+                    </div>
+                    <div class="phrasing_condition_line">
+                      <label for="PhrasingAccent">テキスト上のアクセント</label>
+                      <select name="data[Phrasing][accent]" id="PhrasingAccent">
+                        <option value="norvice">初級者用</option>
+                        <option value="advanced" selected="selected">
+                          上級者用
+                        </option>
+                        <option value="none">非表示</option>
+                        <option value="invisible">
+                          テキストも含めて非表示
+                        </option>
+                      </select>
+                    </div>
+                    <div class="phrasing_condition_line">
+                      <label for="PhrasingAccentMark">アクセントマーク</label>
+                      <select
+                        name="data[Phrasing][accent_mark]"
+                        id="PhrasingAccentMark"
+                      >
+                        <option value="all" selected="selected">
+                          核とＨを表示
+                        </option>
+                        <option value="core">核のみを表示</option>
+                        <option value="low">Lのみを表示</option>
+                        <option value="none">表示しない</option>
+                      </select>
+                    </div>
+                    <div class="phrasing_condition_line">
+                      <label for="PhrasingEstimation"
+                        >アクセント句境界推定</label
+                      >
+                      <select
+                        name="data[Phrasing][estimation]"
+                        id="PhrasingEstimation"
+                      >
+                        <option value="crf" selected="selected">
+                          機械学習による句境界推定
+                        </option>
+                        <option value="bunsetsu">文節境界を利用</option>
+                      </select>
+                    </div>
+                    <div class="phrasing_condition_line">
+                      <label for="PhrasingAnalyze">読み・アクセント推定</label>
+                      <select
+                        name="data[Phrasing][analyze]"
+                        id="PhrasingAnalyze"
+                      >
+                        <option value="true" selected="selected">
+                          推定を行なう
+                        </option>
+                        <option value="false">推定を行なわない</option>
+                      </select>
+                    </div>
+                    <div class="phrasing_condition_line">
+                      <label for="PhrasingPhraseComponent"
+                        >フレーズ成分の表示</label
+                      >
+                      <select
+                        name="data[Phrasing][phrase_component]"
+                        id="PhrasingPhraseComponent"
+                      >
+                        <option value="invisible" selected="selected">
+                          非表示
+                        </option>
+                        <option value="visible">表示</option>
+                      </select>
+                    </div>
+                    <div class="phrasing_condition_line">
+                      <label for="PhrasingParam"
+                        >ピッチパターン表示用パラメータ</label
+                      >
+                      <select name="data[Phrasing][param]" id="PhrasingParam">
+                        <option value="invisible" selected="selected">
+                          非表示
+                        </option>
+                        <option value="visible">表示</option>
+                      </select>
+                    </div>
+                    <div class="phrasing_condition_line">
+                      <label for="PhrasingSubscript">原文の表示</label>
+                      <select
+                        name="data[Phrasing][subscript]"
+                        id="PhrasingSubscript"
+                      >
+                        <option value="visible" selected="selected">
+                          表示
+                        </option>
+                        <option value="invisible">非表示</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="phrasing_condition_line">
+                    <label for="PhrasingJeita">JEITAラベルの表示</label>
+                    <select name="data[Phrasing][jeita]" id="PhrasingJeita">
+                      <option value="invisible" selected="selected">
+                        非表示
+                      </option>
+                      <option value="visible">表示</option>
+                    </select>
+                  </div>
+                  <div id="phrasing_submit_wrapper">
+                    <div class="submit">
+                      <input type="submit" value="実行" />
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <script type="text/javascript">
+                $(function () {
+                  $("#PhrasingCurve").val("advanced");
+                  $("#PhrasingAccent").val("advanced");
+                });
+              </script>
+            </div>
+
+            <div id="phrasing_main" class="ojad_dropshadow_standalone">
+              <div
+                class="synthesis_synthesis_button phrasing_edit_link clear"
+                style="margin: 5px"
+              >
+                <font size="2"> 話速 </font>
+                <select
+                  id="speech_rate_mode"
+                  name="speech_rate_mode"
+                  onchange="linked(this)"
+                >
+                  <option value="1">Normal</option>
+                  <option value="2">Slow</option>
+                  <option value="3">Fast</option>
+                </select>
+              </div>
+              <div
+                class="synthesis_synthesis_button phrasing_edit_link clear"
+                style="margin: 5px"
+              >
+                <font size="2"> 話者 </font>
+                <select id="speaker" name="speaker" onchange="linked(this)">
+                  <option value="fa001">F1</option>
+                  <option value="fb001">F2</option>
+                  <option value="ma003">M1</option>
+                  <option value="mb001">M2</option>
+                </select>
+              </div>
+
+              <div class="phrasing_edit_link clear">
+                <div class="submit">
+                  <input
+                    type="button"
+                    value="印字"
+                    onclick="$('#PhrasingPublishIndexForm').submit(); return false;"
+                  />
+                </div>
+              </div>
+              <div
+                class="synthesis_save_button phrasing_edit_link clear"
+                style="display: none"
+              >
+                <div class="submit">
+                  <input
+                    type="button"
+                    value="保存"
+                    onclick="wav_filename_save(); return false;"
+                  />
+                </div>
+              </div>
+              <div
+                class="synthesis_play_button phrasing_edit_link clear"
+                style="display: none"
+              >
+                <div class="submit">
+                  <input
+                    type="button"
+                    value="再開"
+                    onclick="audio_global_resume(); return false;"
+                  />
+                </div>
+              </div>
+              <div
+                class="synthesis_play_button phrasing_edit_link clear"
+                style="display: none"
+              >
+                <div class="submit">
+                  <input
+                    type="button"
+                    value="停止"
+                    onclick="audio_global_pause(); return false;"
+                  />
+                </div>
+              </div>
+              <div
+                class="synthesis_play_button phrasing_edit_link clear"
+                style="display: none"
+              >
+                <div class="submit">
+                  <input
+                    type="button"
+                    value="再生"
+                    onclick="wav_filename_play(); return false;"
+                  />
+                </div>
+              </div>
+              <div class="synthesis_synthesis_button phrasing_edit_link clear">
+                <div class="submit">
+                  <input
+                    type="button"
+                    value="作成"
+                    onclick="synthesis_and_get_filename(); return false;"
+                  />
+                </div>
+              </div>
+
+              <div class="phrasing_row_wrapper clearfix">
+                <div class="phrasing_phrase_wrapper">
+                  <div class="phrasing_accent_curve">
+                    <canvas id="#phrase_0_0" width="160" height="100"></canvas>
+                  </div>
+
+                  <script type="text/javascript">
+                    $(function () {
+                      set_accent_curve_phrase(
+                        "#phrase_0_0",
+                        8,
+                        [0, 0, 1, 1, 1, 1, 0, 0],
+                        2,
+                        0,
+                        0
+                      );
+                    });
+                  </script>
+
+                  <div class="phrasing_text">
+                    <span class="mola_0"
+                      ><span class="inner"
+                        ><span class="char">に</span
+                        ><span class="char">ゅ</span></span
+                      ></span
+                    ><span class="accent_plain mola_1"
+                      ><span class="inner"
+                        ><span class="char">う</span></span
+                      ></span
+                    ><span class="accent_plain mola_2"
+                      ><span class="inner"
+                        ><span class="char">が</span></span
+                      ></span
+                    ><span class="accent_plain unvoiced mola_3"
+                      ><span class="inner"
+                        ><span class="char">く</span></span
+                      ></span
+                    ><span class="accent_top unvoiced mola_4"
+                      ><span class="inner"
+                        ><span class="char">し</span></span
+                      ></span
+                    ><span class="mola_5"
+                      ><span class="inner"
+                        ><span class="char">け</span></span
+                      ></span
+                    ><span class="mola_6"
+                      ><span class="inner"
+                        ><span class="char">ん</span></span
+                      ></span
+                    ><span class="inner endspace"
+                      ><span class="char"></span
+                    ></span>
+                  </div>
+
+                  <div class="phrasing_subscript">
+                    <span>入学試験</span
+                    ><span class="inner endspace"
+                      ><span class="char"></span
+                    ></span>
+                  </div>
+                </div>
+              </div>
+              <div class="phrasing_row_wrapper clearfix">
+                <div class="phrasing_phrase_wrapper"></div>
+              </div>
+
+              <script type="text/javascript">
+                $(window).load(function () {
+                  f.set_and_draw("avg_flag", 0);
+                  f.set_and_draw("phraseline_flag", false);
+                  $("div.phrasing_text")
+                    .children()
+                    .children("span.inner")
+                    .click(function () {
+                      if (_shift_key_down_check()) {
+                        return;
+                      }
+                      var phrase_id = $(this)
+                        .parents(".phrasing_phrase_wrapper")
+                        .find("canvas")
+                        .attr("id");
+                      var molaObj = $(this).parent();
+                      var clickedMola = parseInt(
+                        molaObj.attr("class").split("mola_")[1].split(" ")[0]
+                      );
+                      var clickedChar = 0;
+                      var num = 0;
+                      molaObj
+                        .parent()
+                        .children()
+                        .each(function () {
+                          if ($(this).attr("class").split("mola_").length != 2)
+                            return true;
+                          var mola = parseInt(
+                            $(this)
+                              .attr("class")
+                              .split("mola_")[1]
+                              .split(" ")[0]
+                          );
+                          if (clickedMola > mola) {
+                            $(this)
+                              .children()
+                              .children()
+                              .each(function () {
+                                clickedChar++;
+                              });
+                          } else if (mola == clickedMola) {
+                            $(this)
+                              .children()
+                              .children()
+                              .each(function () {
+                                num++;
+                              });
+                          }
+                        });
+                      modify_accent_curve(phrase_id, clickedChar, num);
+                      modify_accent_display(
+                        phrase_id,
+                        molaObj.parent(),
+                        clickedMola
+                      );
+                      synthesis_button_reset();
+                    });
+                  var click_modify_question = function () {
+                    if (_shift_key_down_check()) {
+                      return;
+                    }
+                    var phrase_id = $(this)
+                      .parents(".phrasing_phrase_wrapper")
+                      .find("canvas")
+                      .attr("id");
+                    modify_question(phrase_id);
+                    synthesis_button_reset();
+                  };
+
+                  $("div.phrasing_text")
+                    .children("span.endspace")
+                    .click(click_modify_question);
+                  $("div.phrasing_text")
+                    .children("span.endmark")
+                    .click(click_modify_question);
+                });
+                function open_print_window() {
+                  $("#PhrasingPublishFujisaki").val(JSON.stringify(f.curves));
+                  $("#PhrasingPublishText").val("");
+                  $("#PhrasingPublishText").val(
+                    $("#phrasing_main")
+                      .html()
+                      .replace(/<script[^<]*<\/script>?/g, "")
+                  );
+                  return false;
+                }
+              </script>
+
+              <script type="text/javascript">
+                function linked(e) {
+                  var i = 0,
+                    s;
+                  var sel = document.getElementsByTagName("select");
+                  while ((s = sel[i++])) {
+                    if (s.name == e.name && s != e) {
+                      s.selectedIndex = e.selectedIndex;
+                    }
+                  }
+                }
+              </script>
+              <div
+                class="synthesis_synthesis_button phrasing_edit_link clear"
+                style="margin: 5px"
+              >
+                <font size="2"> 話速 </font>
+                <select
+                  id="speech_rate_mode"
+                  name="speech_rate_mode"
+                  onchange="linked(this)"
+                >
+                  <option value="1">Normal</option>
+                  <option value="2">Slow</option>
+                  <option value="3">Fast</option>
+                </select>
+              </div>
+              <div
+                class="synthesis_synthesis_button phrasing_edit_link clear"
+                style="margin: 5px"
+              >
+                <font size="2"> 話者 </font>
+                <select id="speaker" name="speaker" onchange="linked(this)">
+                  <option value="fa001">F1</option>
+                  <option value="fb001">F2</option>
+                  <option value="ma003">M1</option>
+                  <option value="mb001">M2</option>
+                </select>
+              </div>
+
+              <div class="phrasing_edit_link clear">
+                <form
+                  action="/ojad/phrasing/publish"
+                  onsubmit="open_print_window();"
+                  target="_blank"
+                  id="PhrasingPublishIndexForm"
+                  method="post"
+                  accept-charset="utf-8"
+                >
+                  <div style="display: none">
+                    <input type="hidden" name="_method" value="POST" />
+                  </div>
+                  <input
+                    type="hidden"
+                    name="data[PhrasingPublish][text]"
+                    value=""
+                    id="PhrasingPublishText"
+                  />
+                  <input
+                    type="hidden"
+                    name="data[PhrasingPublish][fujisaki]"
+                    value=""
+                    id="PhrasingPublishFujisaki"
+                  />
+                  <input
+                    type="hidden"
+                    name="data[PhrasingPublish][curve]"
+                    value="advanced"
+                    id="PhrasingPublishCurve"
+                  /><input
+                    type="hidden"
+                    name="data[PhrasingPublish][accent]"
+                    value="advanced"
+                    id="PhrasingPublishAccent"
+                  /><input
+                    type="hidden"
+                    name="data[PhrasingPublish][accent_mark]"
+                    value="all"
+                    id="PhrasingPublishAccentMark"
+                  /><input
+                    type="hidden"
+                    name="data[PhrasingPublish][phrase_component]"
+                    value="invisible"
+                    id="PhrasingPublishPhraseComponent"
+                  /><input
+                    type="hidden"
+                    name="data[PhrasingPublish][param]"
+                    value="invisible"
+                    id="PhrasingPublishParam"
+                  /><input
+                    type="hidden"
+                    name="data[PhrasingPublish][analyze]"
+                    value="true"
+                    id="PhrasingPublishAnalyze"
+                  /><input
+                    type="hidden"
+                    name="data[PhrasingPublish][jeita]"
+                    value="invisible"
+                    id="PhrasingPublishJeita"
+                  /><input
+                    type="hidden"
+                    name="data[PhrasingPublish][subscript]"
+                    value="visible"
+                    id="PhrasingPublishSubscript"
+                  />
+                  <p></p>
+                  <div class="submit"><input type="submit" value="印字" /></div>
+                  <p></p>
+                </form>
+              </div>
+
+              <div
+                class="synthesis_save_button phrasing_edit_link clear"
+                style="display: none"
+              >
+                <div class="submit">
+                  <input
+                    type="button"
+                    value="保存"
+                    onclick="wav_filename_save(); return false;"
+                  />
+                </div>
+              </div>
+              <div
+                class="synthesis_play_button phrasing_edit_link clear"
+                style="display: none"
+              >
+                <div class="submit">
+                  <input
+                    type="button"
+                    value="再開"
+                    onclick="audio_global_resume(); return false;"
+                  />
+                </div>
+              </div>
+              <div
+                class="synthesis_play_button phrasing_edit_link clear"
+                style="display: none"
+              >
+                <div class="submit">
+                  <input
+                    type="button"
+                    value="停止"
+                    onclick="audio_global_pause(); return false;"
+                  />
+                </div>
+              </div>
+              <div
+                class="synthesis_play_button phrasing_edit_link clear"
+                style="display: none"
+              >
+                <div class="submit">
+                  <input
+                    type="button"
+                    value="再生"
+                    onclick="wav_filename_play(); return false;"
+                  />
+                </div>
+              </div>
+              <div class="synthesis_synthesis_button phrasing_edit_link clear">
+                <div class="submit">
+                  <input
+                    type="button"
+                    value="作成"
+                    onclick="synthesis_and_get_filename(); return false;"
+                  />
+                </div>
+              </div>
+              <script type="text/javascript">
+                $(window).load(function () {
+                  synthesis_button_reset();
+                });
+              </script>
+              <script type="text/javascript" language="javascript">
+                wav_filename = "";
+                function wav_filename_play() {
+                  if (wav_filename !== "") {
+                    src_global_play(baseuri + "tmp/" + wav_filename);
+                    // console.log("played:" + wav_filename);
+                  }
+                }
+                function wav_filename_save() {
+                  if (wav_filename !== "") {
+                    location.href =
+                      baseuri + "ajax/tmp_download/" + wav_filename;
+                    // console.log("download:" + wav_filename);
+                  }
+                }
+
+                function synthesis_button_loading() {
+                  $(".synthesis_synthesis_button")
+                    .find("input[type='button']")
+                    .attr("disabled", "disabled");
+                  $(".synthesis_play_button").hide();
+                  $(".synthesis_save_button").hide();
+                  $(".synthesis_synthesis_button")
+                    .find("input[type='button']")
+                    .val("合成音声を作成中・・・");
+                  synthesis_button_os_setting();
+                }
+                function synthesis_button_avaliable() {
+                  $(".synthesis_play_button").show();
+                  $(".synthesis_save_button").show();
+                  $(".synthesis_synthesis_button").show();
+                  synthesis_button_os_setting();
+                }
+                function synthesis_button_reset() {
+                  $(".synthesis_synthesis_button").show();
+                  $(".synthesis_synthesis_button")
+                    .find("input[type='button']")
+                    .removeAttr("disabled");
+                  $(".synthesis_synthesis_button")
+                    .find("input[type='button']")
+                    .val("作成");
+                  $(".synthesis_play_button").hide();
+                  $(".synthesis_save_button").hide();
+                  synthesis_button_os_setting();
+                }
+                function synthesis_button_os_setting() {
+                  if (navigator.userAgent.search(/iPhone/) != -1) {
+                    $(".synthesis_save_button").hide();
+                  } else if (navigator.userAgent.search(/iPad/) != -1) {
+                    $(".synthesis_save_button").hide();
+                  } else if (navigator.userAgent.search(/iPod/) != -1) {
+                    $(".synthesis_save_button").hide();
+                  }
+                  if ($.browser.msie && $.browser.version < 8) {
+                    $(".synthesis_synthesis_button").hide();
+                    $(".synthesis_play_button").hide();
+                    $(".synthesis_save_button").hide();
+                  }
+                }
+
+                function synthesis_and_get_filename(condition, mode) {
+                  synthesis_button_loading();
+                  var acc_hl = "";
+                  if ("advanced" == "advanced") {
+                    acc_hl = JSON.stringify(f.curves);
+                  }
+                  var taset =
+                    '["\u306b\u3085\u3046\u304c\u304f%\u3057%a\u3051\u3093.t\u30cb\u30e5\u30fc\u30ac\u30af%\u30b7%a\u30b1\u30f3."]';
+                  var speaker = document.getElementById("speaker").value;
+                  var speech_rate_mode =
+                    document.getElementById("speech_rate_mode").value;
+                  var syn_url = baseuri + "ajax/synthesize";
+
+                  wav_filename = "";
+
+                  // 通信実行
+                  $.ajax({
+                    type: "post", // method = "POST"
+                    url: syn_url, // POST送信先のURL
+                    data: {
+                      acc_hl: acc_hl,
+                      taset: taset,
+                      speaker: speaker,
+                      speech_rate_mode: speech_rate_mode,
+                    }, // JSONデータ本体
+                    success: function (json_data) {
+                      // 200 OK時
+                      // JSON Arrayの先頭が成功フラグ、失敗の場合2番目がエラーメッセージ
+                      if (!json_data[0]) {
+                        // サーバが失敗を返した場合
+                        alert("Transaction error. " + json_data[1]);
+                        return;
+                      }
+                      // 成功時処理
+                      s1 = "Error1:";
+                      s2 = "Error2:";
+                      s3 = "Error3:";
+                      //console.log(json_data);
+                      if (json_data.match(s1)) {
+                        msg =
+                          "エラー：" +
+                          "「" +
+                          json_data.replace("Error1:", "") +
+                          "」" +
+                          "について、不適切なアクセントが付与されているようです。修正して下さい。";
+                        alert(msg);
+                      } else if (json_data.match(s3)) {
+                        msg = "エラー：文章が長すぎです。";
+                        alert(msg);
+                      } else {
+                        result_array = json_data.split("@");
+                        $("#jeita").show();
+                        $("#jeita_label").html(result_array[1]);
+                        wav_filename = result_array[0];
+                      }
+                    },
+                    error: function (error_log) {
+                      // HTTPエラー時
+                      //  console.log("Server Error. Pleasy try again later.");
+                      //  console.log(error_log);
+                    },
+                    complete: function () {
+                      // 成功・失敗に関わらず通信が終了した際の処理
+                      synthesis_button_reset();
+                      if (wav_filename !== "") {
+                        synthesis_button_avaliable();
+                      }
+                    },
+                  });
+                }
+              </script>
+            </div>
+            <style type="text/css"></style>
+
+            <div class="ds_t">
+              <h2 class="ds_t_2">テキスト読み上げに関する注意事項</h2>
+
+              <div>
+                <p class="nml">
+                  読み上げ機能は，「ピッチパターン」及び「テキスト上のアクセント」が上級＆上級，あるいは，初級＆初級の時のみご利用戴けますが，初級＆初級で呈示される音声は上級＆上級での音声です。初級＆初級での韻律パターンに添った読み上げはサポートしておりません。ピッチエディタによる修正が読み上げに反映されるのも，上級＆上級の時のみです。
+                </p>
+                <p class="nml">
+                  なお，句点，読点，／記号では，ポーズ長が異なります。／記号は，句点，読点より短いポーズとなっています。
+                </p>
+                <p class="nml">
+                  スズキクンを喋らせることで得られた音声データを，OJAD
+                  以外のサービス，機器，ソフトウェアに直接組み込んだり，OJAD
+                  以外の web
+                  サービス等がスズキクンの発声機能を間接的に利用するなどの行為を禁止します。なお，利用者が日本語の学習や研究のために音声データを機器に録音する行為は，本禁止事項「機器に直接組み込むこと」には含まれません。
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="ojad_dropshadow_standalone back_to_top">
+            <a href="/ojad/">OJADトップページに戻る</a>
+          </div>
+        </td>
+      </tr>
+      <tr id="footer">
+        <td></td>
+        <td>
+          <div class="ds">
+            <p>
+              東京大学大学院 工学系研究科 峯松研究室 / 情報理工学系研究科
+              廣瀬研究室
+            </p>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div id="functions" style="display: none">
+    <div id="audio_replace_div"></div>
+  </div>
+
+  <div id="forest-ext-shadow-host"></div>
+</body>
