@@ -5,6 +5,16 @@ from functools import cmp_to_key
 from pandas.io import excel
 
 
+def un_nan_tuple(tup):
+    """
+    Apparently the nan values cause issues where you can have a set or
+    something with multiple distinct nan values and this makes it hard
+    later to check what words we've looked up already. To that end we
+    remove all nans and replace them with empty strings.
+    """
+    return tuple([el if not pd.isna(el) else "" for el in tup])
+
+
 def clean_word(word):
     return (
         word.replace("～", "")
@@ -43,29 +53,23 @@ def get_tango_by_lesson(df):
         # dictionary that will hold all the vocab from each lesson. So
         # we do that here.
         #
-        # First we need to make it hashable. wt == word tuple
-
-        # Remove characters that cause problems in the tuple name (we
-        # don't remove these from the kana strings contained therein)
-        tname = (
-            word[1]["kana"]
-            .replace("～", "")
-            .replace("(", "")
-            .replace(")", "")
-            .replace("…", "")
-            .replace("・", "")
-        )
+        # First we need to make it hashable.
+        #
+        # Remove just the square brackets that for some reason all
+        # kanji readings were wrapped in
         if not pd.isna(word[1]["kanji"]):
             word[1]["kanji"] = word[1]["kanji"].replace("［", "").replace("］", "")
-        wt = namedtuple(tname, word[1].index)(*word[1])
-        for lesson in word[1]["lesson"].split("; "):
+
+        # wt == "word tuple" --> hashable.
+        wt = un_nan_tuple(tuple(word[1]))  # the 0 index contains the index in the csv
+        for lesson in wt[-1].split("; "):
             lesson_names.add(lesson)
             # lesson number, and the subsection within that lesson
             # number
             try:
                 lnum, lsec = lesson.split("-")
             except ValueError:
-                print(word)
+                print(f"word {word} has corrupted lesson string.")
             if lnum not in tango_by_lesson:
                 tango_by_lesson[lnum] = {}
             if lsec not in tango_by_lesson[lnum]:

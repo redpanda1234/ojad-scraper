@@ -21,8 +21,12 @@ import pandas as pd
 from ingest_data import clean_word
 
 
-def query_tatoeba(browser, word):
-    prefix = r"https://tatoeba.org/en/sentences/search?from=jpn&has_audio=yes&native=&orphans=no&query="
+def query_tatoeba(browser, word, try_audio=True):
+    if try_audio:
+        prefix = r"https://tatoeba.org/en/sentences/search?from=jpn&has_audio=yes&native=&orphans=no&query="
+    else:
+        prefix = r"https://tatoeba.org/en/sentences/search?from=jpn&has_audio=&native=&orphans=no&query="
+
     suffix = r"&sort=relevance&sort_reverse=&tags=&to=eng&trans_filter=limit&trans_has_audio=&trans_link=&trans_orphan=&trans_to=&trans_unapproved=&trans_user=&unapproved=no&user="
     browser.get(f"{prefix}{word}{suffix}")
     return browser
@@ -38,30 +42,31 @@ def wait_for_element(browser, By_what, trigger_string, kanji_string, timeout=5):
 
 
 # いい例
-def get_ii_rei(browser, kanji_string, lesson, timeout=5):
-    result_page = query_tatoeba(browser, clean_word(kanji_string))
+def get_ii_rei(browser, kanji_string, lesson, try_audio=True, timeout=5):
+    result_page = query_tatoeba(browser, clean_word(kanji_string), try_audio=try_audio)
     # wait for text box to appear and then enter our kanji string into it
     wait_for_element(browser, By.CLASS_NAME, "sentence", kanji_string, timeout=timeout)
     sent = browser.find_element(By.CLASS_NAME, "sentence")
 
-    wait_for_element(
-        sent,
-        By.XPATH,
-        "//*[contains(@href, 'tatoeba.org/en/audio/download')]",
-        kanji_string,
-        timeout=timeout,
-    )
-    audio_url = sent.find_element(
-        By.XPATH, "//*[contains(@href, 'tatoeba.org/en/audio/download')]"
-    ).get_attribute("href")
+    local_audio_path = ""
+    # Try to get the audio file if there's a reading provided
+    if try_audio:
+        wait_for_element(
+            sent,
+            By.XPATH,
+            "//*[contains(@href, 'tatoeba.org/en/audio/download')]",
+            kanji_string,
+            timeout=timeout,
+        )
+        audio_url = sent.find_element(
+            By.XPATH, "//*[contains(@href, 'tatoeba.org/en/audio/download')]"
+        ).get_attribute("href")
 
-    lesson_path = (
-        f"/home/fkobayashi/.local/share/Anki2/User 1/collection.media/audio/{lesson}"
-    )
-    pathlib.Path(lesson_path).mkdir(parents=True, exist_ok=True)
-    local_audio_path = f"{lesson_path}/{kanji_string}.mp3"
+        lesson_path = f"/home/fkobayashi/.local/share/Anki2/User 1/collection.media/audio/{lesson}"
+        pathlib.Path(lesson_path).mkdir(parents=True, exist_ok=True)
+        local_audio_path = f"{lesson_path}/{kanji_string}.mp3"
 
-    subprocess.run(["curl", "-s", "-L", audio_url, "--output", local_audio_path])
+        subprocess.run(["curl", "-s", "-L", audio_url, "--output", local_audio_path])
 
     # request pitch analysis
     wait_for_element(
@@ -87,26 +92,47 @@ def get_ii_rei(browser, kanji_string, lesson, timeout=5):
 #     return word_dict
 
 
-def nt_words_rei(browser, words, timeout=15):
+def get_words_rei(browser, words, timeout=10):
     """
     This one expects "words" to be a collection of named tuples
     """
     word_dict = {}
     for word in tqdm(words):
+        kana, kanji, english, lesson = word
         try:
-            if not pd.isna(word.kanji):
-                word_data = get_ii_rei(
-                    browser, word.kanji, word.lesson, timeout=timeout
-                )
-            elif not pd.isna(word.kana):
-                word_data = get_ii_rei(browser, word.kana, word.lesson, timeout=timeout)
+            if kanji:
+                word_data = get_ii_rei(browser, kanji, lesson, timeout=timeout)
+            elif kana:
+                word_data = get_ii_rei(browser, kana, lesson, timeout=timeout)
             else:
                 assert False
             local_audio_path, transcript = word_data
 
         except:  # timeout
             local_audio_path = ""
-            transcript = ""
+            try:  # Try not requiring audio (often fixes the no
+                # examples issue)
+                if kanji:
+                    word_data = get_ii_rei(
+                        browser,
+                        kanji,
+                        lesson,
+                        try_audio=False,
+                        timeout=timeout,
+                    )
+                elif kana:
+                    word_data = get_ii_rei(
+                        browser,
+                        kana,
+                        lesson,
+                        try_audio=False,
+                        timeout=timeout,
+                    )
+                else:
+                    assert False
+                local_audio_path, transcript = word_data
+            except:  # This is the case we can't get ANYTHING
+                transcript = ""
 
         word_dict[word] = {"audio path": local_audio_path, "transcript": transcript}
 

@@ -12,6 +12,9 @@ from tqdm import tqdm as tqdm
 from time import sleep
 import random
 import re
+import shutil
+
+import pickle as pkl
 
 import genanki
 
@@ -95,17 +98,20 @@ def query_ojad(browser, kanji_string, timeout=5):
 #     return word_dict
 
 
-def nt_words_pitch(browser, words, timeout=5):
+def get_words_pitch(browser, words, timeout=5):
     """
-    This one expects "words" to be a collection of named tuples
+    This one expects "words" to be a collection of tuples of the form
+    (kana, kanji, english, lesson)
     """
     word_dict = {}
     for word in tqdm(words):
-        if not pd.isna(word.kanji):
-            word_data = query_ojad(browser, word.kanji, timeout=timeout)
-        elif not pd.isna(word.kana):
-            word_data = query_ojad(browser, word.kana, timeout=timeout)
+        kana, kanji, english, lesson = word
+        if kanji:
+            word_data = query_ojad(browser, kanji, timeout=timeout)
+        elif kana:
+            word_data = query_ojad(browser, kana, timeout=timeout)
         else:
+            print(word)
             assert False
 
         pitch_reading = word_data.find_element(
@@ -134,11 +140,40 @@ def nt_words_pitch(browser, words, timeout=5):
 
 
 def merge_dicts(dict1, dict2):
+    """
+    by default, assume dict2 is newer
+    """
     new_dict = {}
-    assert set(dict1.keys()) == set(dict2.keys())
-    for key in dict1:
-        new_dict[key] = dict1[key] | dict2[key]
+    # assert set(dict1.keys()) == set(dict2.keys())
+    for key in set(dict1.keys()) | set(dict2.keys()):
+        if key not in dict1:
+            new_dict[key] = dict2[key]
+        elif key not in dict2:
+            new_dict[key] = dict1[key]
+        else:
+            new_dict[key] = dict1[key] | dict2[key]
+
     return new_dict
+
+
+def get_no_pitch_words(word_data, words):
+    no_pitch_words = set()
+    for word in words:
+        if word not in word_data or (
+            word_data[word]["pitch reading"] + word_data[word]["pitch curve data"] == ""
+        ):
+            no_pitch_words.add(word)
+    return no_pitch_words
+
+
+def get_no_rei_words(word_data, words):
+    no_rei_words = set()
+    for word in words:
+        if word not in word_data or (
+            word_data[word]["audio path"] + word_data[word]["transcript"] == ""
+        ):
+            no_rei_words.add(word)
+    return no_rei_words
 
 
 def main():
@@ -150,7 +185,9 @@ def main():
     lessons = lesson_names[0:35]
     for lesson in lessons:
         browser = open_ojad()
+        print("\n\n\n")
         print(lesson)
+        print(70 * "=")
         # lesson number and the section (e.g. 会話１) within that lesson
         try:
             lnum, lsec = lesson.split("-")
@@ -161,22 +198,47 @@ def main():
 
         words = tango_by_lesson[lnum][lsec]
 
-        print("fetching pitch data...")
-        pitch_data = nt_words_pitch(browser, words)
-        print("fetching example data...")
-        rei_data = nt_words_rei(browser, words)
+        lesson_pkl = f"./data/{lesson}.pkl"
 
-        # merge my stupid dictionaries
-        word_data = merge_dicts(pitch_data, rei_data)
+        try:
+            with open(lesson_pkl, "rb") as f:
+                word_data = pkl.load(f)
+        except:  # FileNotFoundError
+            subprocess.call(["touch", lesson_pkl])  # so no
+            # filenotfound when moving the backup later
+            word_data = {}
+            # print("word data keys: ", word_data.keys())
 
-        # with open(f"./data/{lesson}.pkl", "wb") as f:
-        #     pickle.dump(word_data, f)
+        needs_pitch = get_no_pitch_words(word_data, words)
+        needs_rei = get_no_rei_words(word_data, words)
+
+        if needs_pitch:
+            print("\n")
+            print(70 * "-")
+            print(f"needs pitch: {needs_pitch}")
+            print("fetching pitch data...")
+            pitch_data = get_words_pitch(browser, needs_pitch)
+            # merge my stupid dictionaries
+            word_data = merge_dicts(word_data, pitch_data)
+        if needs_rei:
+            print("\n")
+            print(70 * "-")
+            print(f"needs example: {needs_rei}")
+            print("fetching example data...")
+            rei_data = get_words_rei(browser, needs_rei)
+            word_data = merge_dicts(word_data, rei_data)
+
+        # Backup data before overwrite
+        shutil.move(lesson_pkl, lesson_pkl + ".bak")
+        with open(lesson_pkl, "wb") as f:
+            pickle.dump(word_data, f)
 
         for word in words:
-            if not pd.isna(word.kanji):
-                reading = word.kanji
-            elif not pd.isna(word.kana):
-                reading = word.kana
+            kana, kanji, english, lesson = word
+            if kanji:
+                reading = kanji
+            elif kana:
+                reading = kana
             else:
                 assert False
 
@@ -192,8 +254,8 @@ def main():
                 model=automated_ojad_model,
                 fields=[
                     reading,
-                    word.english,
-                    transcript,  # example sentence
+                    english,
+                    transcript,  # example sentence w/ furigana from tatoeba
                     "",  # kanji meaning support might come later
                     "",  # part of speech support might come later
                     pitch_curve_data,  # pitch curve data
@@ -205,7 +267,7 @@ def main():
                 ],
             )
             lesson_deck.add_note(word_note)
-        genanki.Package(lesson_deck).write_to_file(f"./ojadtest-{lesson}.apkg")
+        genanki.Package(lesson_deck).write_to_file(f"./apkgs/{lesson}.apkg")
 
 
 # def test():
