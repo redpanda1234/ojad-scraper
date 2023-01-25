@@ -179,7 +179,7 @@ text-underline-position: under;
 }
 .phrasing_text {
   margin-top: -1.25em;
-  margin-left: 1em;
+  margin-left: .375em;
   margin-bottom: -3.25em;
   padding-bottom: 3em;
 }

@@ -62,9 +62,9 @@ def get_ii_rei(browser, kanji_string, lesson, try_audio=True, timeout=5):
             By.XPATH, "//*[contains(@href, 'tatoeba.org/en/audio/download')]"
         ).get_attribute("href")
 
-        lesson_path = f"/home/fkobayashi/.local/share/Anki2/User 1/collection.media/audio/{lesson}"
+        media_path = "/home/fkobayashi/.local/share/Anki2/User 1/collection.media/"
         pathlib.Path(lesson_path).mkdir(parents=True, exist_ok=True)
-        local_audio_path = f"{lesson_path}/{kanji_string}.mp3"
+        local_audio_path = f"{lesson}-{kanji_string}.mp3"
 
         subprocess.run(["curl", "-s", "-L", audio_url, "--output", local_audio_path])
 

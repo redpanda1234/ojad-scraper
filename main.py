@@ -203,30 +203,48 @@ def main():
         try:
             with open(lesson_pkl, "rb") as f:
                 word_data = pkl.load(f)
+                for word in word_data:
+                    # word_data[word]["audio path"] = re.sub(
+                    #     "/home/fkobayashi/.local/share/Anki2/User 1/collection.media/",
+                    #     "",
+                    #     word_data[word]["audio path"],
+                    # )
+                    # word_data[word]["audio path"] = re.sub(
+                    #     "audio/",
+                    #     "",
+                    #     word_data[word]["audio path"],
+                    # )
+                    word_data[word]["audio path"] = re.sub(
+                        "/", "-", word_data[word]["audio path"]
+                    )
         except:  # FileNotFoundError
             subprocess.call(["touch", lesson_pkl])  # so no
             # filenotfound when moving the backup later
             word_data = {}
             # print("word data keys: ", word_data.keys())
 
-        needs_pitch = get_no_pitch_words(word_data, words)
-        needs_rei = get_no_rei_words(word_data, words)
+        # needs_pitch = get_no_pitch_words(word_data, words)
+        # needs_rei = get_no_rei_words(word_data, words)
 
-        if needs_pitch:
-            print("\n")
-            print(70 * "-")
-            print(f"needs pitch: {needs_pitch}")
-            print("fetching pitch data...")
-            pitch_data = get_words_pitch(browser, needs_pitch)
-            # merge my stupid dictionaries
-            word_data = merge_dicts(word_data, pitch_data)
-        if needs_rei:
-            print("\n")
-            print(70 * "-")
-            print(f"needs example: {needs_rei}")
-            print("fetching example data...")
-            rei_data = get_words_rei(browser, needs_rei)
-            word_data = merge_dicts(word_data, rei_data)
+        # if needs_pitch:
+        #     print("\n")
+        #     print(70 * "-")
+        #     print(f"{len(needs_pitch)} needs pitch data:")
+        #     for word in needs_pitch:
+        #         print(word)
+        #     print("fetching pitch data...")
+        #     pitch_data = get_words_pitch(browser, needs_pitch)
+        #     # merge my stupid dictionaries
+        #     word_data = merge_dicts(word_data, pitch_data)
+        # if needs_rei:
+        #     print("\n")
+        #     print(70 * "-")
+        #     print(f"{len(needs_rei)} words need example sentences:")
+        #     for word in needs_rei:
+        #         print(word)
+        #     print("fetching example data...")
+        #     rei_data = get_words_rei(browser, needs_rei)
+        #     word_data = merge_dicts(word_data, rei_data)
 
         # Backup data before overwrite
         shutil.move(lesson_pkl, lesson_pkl + ".bak")
@@ -234,7 +252,7 @@ def main():
             pickle.dump(word_data, f)
 
         for word in words:
-            kana, kanji, english, lesson = word
+            kana, kanji, english, lesson_tag = word
             if kanji:
                 reading = kanji
             elif kana:
