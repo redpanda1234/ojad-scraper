@@ -1,3 +1,7 @@
 *.apkg
 *.pkl*
+*.json*
+**/pkls/*
+**/jsons/*
+**/apkgs/*
 **/__pycache__/*
