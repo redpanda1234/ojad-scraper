@@ -24,34 +24,38 @@ from genanki_templates import *
 
 import pickle
 
+import argparse
 
-def init_browser():
-    firefox_dev_binary = FirefoxBinary("/usr/bin/firefox-developer-edition")
 
-    fp = webdriver.FirefoxProfile()
-
+def init_browser(args):
     options = Options()
     options.add_argument("--headless")
-
-    browser = webdriver.Firefox(
-        firefox_binary=firefox_dev_binary,
-        executable_path="./geckodriver",
-        firefox_profile=fp,
-        options=options,
-    )
-
+    if args.z:
+        browser = webdriver.Firefox(
+            options=options,
+        )
+    else:
+        # default version
+        firefox_dev_binary = FirefoxBinary("/usr/bin/firefox-developer-edition")
+        fp = webdriver.FirefoxProfile()
+        browser = webdriver.Firefox(
+            firefox_binary=firefox_dev_binary,
+            executable_path="./geckodriver",
+            firefox_profile=fp,
+            options=options,
+        )
     return browser
 
 
-def get_ojad_page(browser):
+# def get_ojad_page(browser):
+#     base_url = "https://www.gavo.t.u-tokyo.ac.jp/ojad/phrasing/index"
+#     page = browser.get(base_url)
+#     return browser
+
+def open_ojad(args):
+    browser = init_browser(args)
     base_url = "https://www.gavo.t.u-tokyo.ac.jp/ojad/phrasing/index"
     page = browser.get(base_url)
-    return browser
-
-
-def open_ojad():
-    browser = init_browser()
-    browser = get_ojad_page(browser)
     return browser
 
 
@@ -176,15 +180,15 @@ def get_no_rei_words(word_data, words):
     return no_rei_words
 
 
-def main():
+def main(args):
     df = get_df()
     lesson_names, tango_by_lesson = get_tango_by_lesson(df)
     anki_ids = get_anki_ids(lesson_names)
 
     # Start with just lesson 1
-    lessons = lesson_names[0:35]
+    lessons = lesson_names[0:1]
     for lesson in lessons:
-        browser = open_ojad()
+        browser = open_ojad(args)
         print("\n\n\n")
         print(lesson)
         print(70 * "=")
@@ -287,6 +291,15 @@ def main():
             lesson_deck.add_note(word_note)
         genanki.Package(lesson_deck).write_to_file(f"./apkgs/{lesson}.apkg")
 
+def parse():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-z', action="store_true",help="run in experimental mode")
+    args = parser.parse_args()
+    return args
+
+if __name__ == "__main__":
+    args = parse()
+    main(args)
 
 # def test():
 #     browser = open_ojad()
