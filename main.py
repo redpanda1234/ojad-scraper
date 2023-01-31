@@ -91,15 +91,15 @@ def query_ojad(browser, kanji_string, timeout=5):
     return pitch_curve_data
 
 
-# def process_words(browser, words, timeout=5):
-#     word_dict = {}
-#     for word in tqdm(words):
-#         word_data = query_ojad(browser, word, timeout=timeout)
-#         # word_data.screenshot("/tmp/" + word + ".png")
-#         word_dict[word] = word_data.get_attribute("outerHTML")
-#         sleep(2 * random.uniform(0, 1))  # Not sure if they'll like ban
-#         # me or something if I query their website too much
-#     return word_dict
+def process_words(browser, words, timeout=5):
+    word_dict = {}
+    for word in tqdm(words):
+        word_data = query_ojad(browser, word, timeout=timeout)
+        word_data.screenshot(word + ".png")
+        word_dict[word] = word_data.get_attribute("outerHTML")
+        sleep(2 * random.uniform(0, 1))  # Not sure if they'll like ban
+        # me or something if I query their website too much
+    return word_dict
 
 
 def get_words_pitch(browser, words, timeout=5):
@@ -186,7 +186,7 @@ def main(args):
     anki_ids = get_anki_ids(lesson_names)
 
     # Start with just lesson 1
-    lessons = lesson_names[0:1]
+    lessons = lesson_names[0:5]
     for lesson in lessons:
         browser = open_ojad(args)
         print("\n\n\n")
@@ -264,12 +264,12 @@ def main(args):
             else:
                 assert False
 
-            pitch_reading, pitch_curve_data, audio_path, transcript = (
-                word_data[word]["pitch reading"],
-                word_data[word]["pitch curve data"],
-                word_data[word]["audio path"],
-                word_data[word]["transcript"],
-            )
+            # pitch_reading, pitch_curve_data, audio_path, transcript = (
+            #     word_data[word]["pitch reading"],
+            #     word_data[word]["pitch curve data"],
+            #     word_data[word]["audio path"],
+            #     word_data[word]["transcript"],
+            # )
             # print(pitch_reading)
 
             word_note = genanki.Note(
@@ -277,14 +277,14 @@ def main(args):
                 fields=[
                     reading,
                     english,
-                    transcript,  # example sentence w/ furigana from tatoeba
+                    "", # transcript,  # example sentence w/ furigana from tatoeba
                     "",  # kanji meaning support might come later
                     "",  # part of speech support might come later
-                    pitch_curve_data,  # pitch curve data
-                    pitch_reading,  # pitch curve reading
+                    "", # pitch_curve_data,  # pitch curve data
+                    "", # pitch_reading,  # pitch curve reading
                     "",  # special notes
                     lesson,
-                    f"[sound:{audio_path}]",  # example sentence audio
+                    "", # f"[sound:{audio_path}]",  # example sentence audio
                     "",  # front sound
                 ],
             )
@@ -299,13 +299,12 @@ def parse():
 
 if __name__ == "__main__":
     args = parse()
+
+    #test
+    # browser = open_ojad(args)
+    # words = ["ために", "入学試験", "一生けんめい", "将来"]
+    # word_dict = process_words(browser, words)
+    # print(word_dict)
+
     main(args)
-
-# def test():
-#     browser = open_ojad()
-#     words = ["ために", "入学試験", "一生けんめい", "将来"]
-#     word_dict = process_words(browser, words)
-
-
-# def gen_cards():
-#     shit_deck = genanki
+    
