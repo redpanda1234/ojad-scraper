@@ -48,14 +48,19 @@ def get_no_rei_words(word_data, words):
 
 
 def main():
+    print("getting dataframe")
     df = get_df()
+
+    print("get got")
     lesson_names, tango_by_lesson = get_tango_by_lesson(df)
     anki_ids = get_anki_ids(lesson_names)
 
     # Start the first 34 lesson sections
     lessons = lesson_names[0:1]
     for lesson in lessons:
+        print("opening ojad")
         browser = open_ojad()
+        print("opened ojad")
         print("\n\n\n")
         print(lesson)
         print(70 * "=")
@@ -73,22 +78,28 @@ def main():
 
         lesson_json = f"./data/jsons/{lesson}.json"
 
+        print(lesson_json)
         if not os.path.exists("./data/jsons/"):
             os.mkdir("./data/jsons")
 
+        print("made dir")
         no_preexisting_json = True
         try:
             word_data = read_from_json(lesson_json)
         except:  # FileNotFoundError
             no_preexisting_json = False
             subprocess.call(["touch", lesson_json])  # so no
+            print("touched")
             # filenotfound when moving the backup later
             word_data = {}
             # print("word data keys: ", word_data.keys())
 
+        print("finding getting pitch")
         needs_pitch = get_no_pitch_words(word_data, words)
+        print("determining needed rei")
         needs_rei = get_no_rei_words(word_data, words)
 
+        print(needs_pitch)
         if needs_pitch:
             print("\n")
             print(70 * "-")
