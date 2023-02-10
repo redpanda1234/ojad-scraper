@@ -1,5 +1,3 @@
-from tqdm import tqdm as tqdm
-
 import shutil
 
 import genanki
@@ -53,7 +51,7 @@ def main():
     anki_ids = get_anki_ids(lesson_names)
 
     # Start the first 34 lesson sections
-    lessons = lesson_names[0:35]
+    lessons = lesson_names[0:1]
     for lesson in lessons:
         browser = open_ojad()
         print("\n\n\n")
