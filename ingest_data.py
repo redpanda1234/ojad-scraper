@@ -6,17 +6,6 @@ from pandas.io import excel
 
 import json
 import os
-import pkl
-
-
-def convert_from_pkl():
-    pkl_names = [fname for fname in os.listdir("data") if fname[-4:] == ".pkl"]
-    print(pkl_names)
-    for pkl_name in pkl_names:
-        with open(f"data/{pkl_name}", "rb") as f:
-            word_data = pkl.load(f)
-        json_name = pkl_name[:-4] + ".json"
-        dump_to_json(word_data, "data/" + json_name)
 
 
 def read_from_json(fname):
