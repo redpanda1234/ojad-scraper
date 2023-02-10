@@ -7,6 +7,8 @@ from scrape_ojad import *
 from scrape_tatoeba import *
 from genanki_templates import *
 
+import os
+
 
 def merge_dicts(dict1, dict2):
     """
@@ -71,9 +73,14 @@ def main():
 
         lesson_json = f"./data/jsons/{lesson}.json"
 
+        if not os.path.exists("./data/jsons/"):
+            os.mkdir("./data/jsons")
+
+        no_preexisting_json = True
         try:
             word_data = read_from_json(lesson_json)
         except:  # FileNotFoundError
+            no_preexisting_json = False
             subprocess.call(["touch", lesson_json])  # so no
             # filenotfound when moving the backup later
             word_data = {}
@@ -103,7 +110,8 @@ def main():
             word_data = merge_dicts(word_data, rei_data)
 
         # Backup data before overwrite
-        shutil.move(lesson_json, f"./data/backups/{lesson}.json.bak")
+        if not no_preexisting_json:
+            shutil.move(lesson_json, f"./data/backups/{lesson}.json.bak")
         dump_to_json(word_data, lesson_json)
 
         for word in words:
