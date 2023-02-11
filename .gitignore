@@ -1,5 +1,9 @@
 *.apkg
 *.pkl*
+*.json*
+**/pkls/*
+**/jsons/*
+**/apkgs/*
 **/__pycache__/*
 
 .venv

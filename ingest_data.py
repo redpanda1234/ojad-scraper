@@ -4,6 +4,40 @@ from functools import cmp_to_key
 
 from pandas.io import excel
 
+import json
+import os
+
+
+def read_from_json(fname):
+    with open(fname, "r") as f:
+        word_data = json.load(f)
+    new_dict = {}
+    for key in word_data:
+        # Key is a string like
+        # ('ちょうし', '調子', 'condition; state', 'L.5-会2')
+        # i.e. (kana, kanji, english, lesson).
+        # has to be string because json requires it.
+        # 2:-2 --> remove the (' [...] ') wrapping the tuple
+        fields = key[2:-2].split("', '")
+        new_key = tuple(fields)
+        try:
+            assert str(new_key) == key
+        except AssertionError as e:
+            print(f"\nFailed to reconstruct key \n{key}\nin jston step.")
+            print(f"Got {new_key} instead.")
+            raise e
+        new_dict[new_key] = word_data[key]
+    return new_dict
+
+
+def dump_to_json(word_data, fname):
+    new_dict = {}
+    for key in word_data:
+        new_dict[str(key)] = word_data[key]
+    print(fname)
+    with open(fname, "w") as f:
+        json.dump(new_dict, f)
+
 
 def un_nan_tuple(tup):
     """
