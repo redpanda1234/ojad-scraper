@@ -13,7 +13,7 @@ from time import sleep
 import random
 import re
 import shutil
-
+from pathlib import Path
 import pickle as pkl
 
 import genanki
@@ -291,20 +291,39 @@ def main(args):
             lesson_deck.add_note(word_note)
         genanki.Package(lesson_deck).write_to_file(f"./apkgs/{lesson}.apkg")
 
+def clean():
+    confirmation = input("delete .apkg and .pkl files? (y/n)")
+    if confirmation.lower() == "y":
+        print("cleaning out directories")
+        apkgs_folder = Path("./apkgs")
+        data_folder = Path("./data")
+        for file in apkgs_folder.glob("*.apkg"):
+            file.unlink()
+        for file in data_folder.glob("*.pkl"):
+            file.unlink()
+        for file in data_folder.glob("*.bak"):
+            file.unlink()
+    else:
+        print("cancelling")
+
+
 def parse():
     parser = argparse.ArgumentParser()
     parser.add_argument('-z', action="store_true",help="run in experimental mode")
+    parser.add_argument('--clean', action="store_true", help="removes .apkg, .pkl, and .pkl.bak files")
+    parser.add_argument('--generate', action="store_true", help="run main and generate files")
     args = parser.parse_args()
     return args
 
 if __name__ == "__main__":
     args = parse()
-
+    if args.clean:
+        clean()
     #test
     # browser = open_ojad(args)
     # words = ["ために", "入学試験", "一生けんめい", "将来"]
     # word_dict = process_words(browser, words)
     # print(word_dict)
-
-    main(args)
+    if args.generate:
+        main(args)
     
