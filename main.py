@@ -54,7 +54,7 @@ def main():
     anki_ids = get_anki_ids(lesson_names)
 
     # Start the first 34 lesson sections
-    lessons = lesson_names[0:1]
+    lessons = lesson_names[0:34]
     for lesson in lessons:
         browser = open_ojad()
         print("\n\n\n")
@@ -74,7 +74,7 @@ def main():
 
         lesson_json = f"./data/jsons/{lesson}.json"
 
-        print(lesson_json)
+        # print(lesson_json)
         if not os.path.exists("./data/jsons/"):
             os.mkdir("./data/jsons")
 
@@ -97,7 +97,7 @@ def main():
         needs_pitch = get_no_pitch_words(word_data, words)
         needs_rei = get_no_rei_words(word_data, words)
 
-        print(needs_pitch)
+        # print(f"Words needing pitch info:\n{needs_pitch}")
         if needs_pitch:
             print("\n")
             print(70 * "-")

@@ -35,7 +35,7 @@ def init_browser():
 
 def get_ojad_page(browser):
     base_url = "https://www.gavo.t.u-tokyo.ac.jp/ojad/phrasing/index"
-    page = browser.get(base_url)
+    browser.get(base_url)
     return browser
 
 
@@ -86,6 +86,32 @@ def query_ojad(browser, kanji_string, timeout=5):
 #         sleep(2 * random.uniform(0, 1))  # Not sure if they'll like ban
 #         # me or something if I query their website too much
 #     return word_dict
+def extract_kana_string(ojad_html):
+    between_html_tags = [char for char in re.findall(r">(.*?)<", ojad_html)]
+    output_str = "".join([char for char in between_html_tags if char.replace(" ", "")])
+    assert "<" not in output_str and ">" not in output_str
+    return output_str
+
+
+def check_reading_matches(pitch_reading, true_kana):
+    """
+    true_kana should be extracted from the vocabulary csv file or
+    something like that
+    """
+    ojad_kana = extract_kana_string(pitch_reading)
+
+    # 少し input sanitize します
+    # For some reason I think there might be two different wave
+    # dashes??
+    for to_strip in "〜～()":
+        true_kana = true_kana.replace(to_strip, "")
+
+    if ojad_kana != true_kana:
+        print(
+            f"OJAD derives incorrect reading for {true_kana}. Got {ojad_kana} instead."
+        )
+        return False
+    return True
 
 
 def get_words_pitch(browser, words, timeout=5):
@@ -107,6 +133,11 @@ def get_words_pitch(browser, words, timeout=5):
         pitch_reading = word_data.find_element(
             By.CLASS_NAME, "phrasing_text"
         ).get_attribute("outerHTML")
+
+        matched = check_reading_matches(pitch_reading, kana)
+        if not matched and kanji:
+            print(f"Kanji: {kanji}\n")
+            continue
 
         pitch_curve_full = word_data.find_element(
             By.XPATH, f"//*[contains(text(), 'set_accent_curve_phrase')]"
