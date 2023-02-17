@@ -11,3 +11,4 @@ venv
 geckodriver.log
 
 .vscode
+temp

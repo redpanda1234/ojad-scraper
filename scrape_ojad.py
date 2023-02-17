@@ -15,33 +15,30 @@ import random
 import re
 
 
-def init_browser():
-    firefox_dev_binary = FirefoxBinary("/usr/bin/firefox-developer-edition")
-
-    fp = webdriver.FirefoxProfile()
-
+def init_browser(args):
     options = Options()
     options.add_argument("--headless")
-
-    browser = webdriver.Firefox(
-        firefox_binary=firefox_dev_binary,
-        executable_path="./geckodriver",
-        firefox_profile=fp,
-        options=options,
-    )
-
+    if args.z:
+        browser = webdriver.Firefox(
+            options=options,
+        )
+    else:
+        # default version
+        firefox_dev_binary = FirefoxBinary("/usr/bin/firefox-developer-edition")
+        fp = webdriver.FirefoxProfile()
+        browser = webdriver.Firefox(
+            firefox_binary=firefox_dev_binary,
+            executable_path="./geckodriver",
+            firefox_profile=fp,
+            options=options,
+        )
     return browser
 
 
-def get_ojad_page(browser):
+def open_ojad(args):
+    browser = init_browser(args)
     base_url = "https://www.gavo.t.u-tokyo.ac.jp/ojad/phrasing/index"
     page = browser.get(base_url)
-    return browser
-
-
-def open_ojad():
-    browser = init_browser()
-    browser = get_ojad_page(browser)
     return browser
 
 

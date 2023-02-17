@@ -185,3 +185,23 @@ text-underline-position: under;
 }
 """,
 )
+
+#TODO make this a lot prettier
+automated_kanji_model = genanki.Model(
+    4234668443,
+    "automated-kanji-card",
+    fields=[
+        {'name': 'kanji'},
+        {'name': 'kun-yomi'},
+        {'name': 'on-yomi'},
+        {'name': 'example words'},
+        {'name': 'example sentences'},
+    ],
+    templates=[
+        {
+            "name": "Card 1",
+            "qfmt": '{{kanji}}',
+            "afmt": '{{kun-yomi}}',
+        }
+    ]
+)

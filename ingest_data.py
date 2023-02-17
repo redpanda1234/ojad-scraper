@@ -5,6 +5,7 @@ from functools import cmp_to_key
 from pandas.io import excel
 
 import json
+import re
 import os
 
 
@@ -60,6 +61,17 @@ def clean_word(word):
         .replace("］", "")
     )
 
+def get_kanji(text):
+    """
+    given a string, return a list of all kanji in the string
+
+    Args:
+        text: the text to parse all kanji from
+    Returns:
+        kanji_list: a list of kanji characters
+    """
+    kanji_regex = r'[㐀-䶵一-鿋豈-頻]'
+    return re.findall(kanji_regex, text)
 
 def get_df():
     """
@@ -67,10 +79,17 @@ def get_df():
     """
     return pd.read_excel("data/tango.ods")
 
-
 def get_tango_by_lesson(df):
     """
     Sort the vocab from the vocabulary csv into lesson categories
+
+    Args:
+        data frame from get_df
+    
+    Returns:
+        A tuple (lesson_names, tango_by_lesson)
+        lesson_names: a list of lesson numbers and sections
+        tango_by_lesson is a dict of dicts
     """
     # Filter out all of the section headers in the index (section
     # headers are the first kana in the word in the section)
@@ -151,13 +170,24 @@ def compare_lesson_strings(s1, s2):
         return lesson_ordering(char1, char2)
 
 
-def get_anki_ids(lesson_names):
+def get_anki_ids(lesson_names, deck_type='core'):
+    """
+    creates unique identifiers for the decks
+
+    Args:
+        lesson_names: A list of lesson numbers and sections
+    """
     # see https://www.reddit.com/r/Anki/comments/i1azpt/why_does_genanki_require_both_the_model_id_and/
     anki_ids = {}
-    default_anki_id = 1598313698029
+    if deck_type == 'core':
+        default_anki_id = 1598313698029
+    elif deck_type == 'kanji':
+        default_anki_id = 1598313699029
+    else:
+        raise Exception("unrecognized deck_type")
 
     # lesson names list
     for (i, lesson) in enumerate(lesson_names):
-        # I hate this so much
+        # I hate this so much | me too
         anki_ids[lesson] = default_anki_id + i
     return anki_ids
