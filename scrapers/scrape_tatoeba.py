@@ -20,6 +20,7 @@ import pandas as pd
 
 from ingest_data import clean_word
 
+from scrapers.browser_setup import wait_for_element
 
 def query_tatoeba(browser, word, try_audio=True):
     if try_audio:
@@ -30,15 +31,6 @@ def query_tatoeba(browser, word, try_audio=True):
     suffix = r"&sort=relevance&sort_reverse=&tags=&to=eng&trans_filter=limit&trans_has_audio=&trans_link=&trans_orphan=&trans_to=&trans_unapproved=&trans_user=&unapproved=no&user="
     browser.get(f"{prefix}{word}{suffix}")
     return browser
-
-
-def wait_for_element(browser, By_what, trigger_string, kanji_string, timeout=5):
-    try:
-        element_loaded = EC.presence_of_element_located((By_what, trigger_string))
-        WebDriverWait(browser, timeout).until(element_loaded)
-
-    except TimeoutException:
-        print(f"Timed out on word {kanji_string}")
 
 
 # いい例
@@ -61,7 +53,6 @@ def get_ii_rei(browser, kanji_string, lesson, try_audio=True, timeout=5):
         audio_url = sent.find_element(
             By.XPATH, "//*[contains(@href, 'tatoeba.org/en/audio/download')]"
         ).get_attribute("href")
-
         media_path = "/home/fkobayashi/.local/share/Anki2/User 1/collection.media/"
         pathlib.Path(lesson_path).mkdir(parents=True, exist_ok=True)
         local_audio_path = f"{lesson}-{kanji_string}.mp3"
@@ -108,6 +99,9 @@ def get_words_rei(browser, words, timeout=10):
                 assert False
             local_audio_path, transcript = word_data
 
+        # TODO: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        # &%*@#(&%*^&
+        # This is catching a lot more than a timeout!!!!
         except:  # timeout
             local_audio_path = ""
             try:  # Try not requiring audio (often fixes the no

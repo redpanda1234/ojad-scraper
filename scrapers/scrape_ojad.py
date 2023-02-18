@@ -14,42 +14,14 @@ from time import sleep
 import random
 import re
 
+from scrapers.browser_setup import init_browser
+from scrapers.browser_setup import wait_for_element
 
-def init_browser(args):
-    options = Options()
-    options.add_argument("--headless")
-    if args.z:
-        browser = webdriver.Firefox(
-            options=options,
-        )
-    else:
-        # default version
-        firefox_dev_binary = FirefoxBinary("/usr/bin/firefox-developer-edition")
-        fp = webdriver.FirefoxProfile()
-        browser = webdriver.Firefox(
-            firefox_binary=firefox_dev_binary,
-            executable_path="./geckodriver",
-            firefox_profile=fp,
-            options=options,
-        )
-    return browser
-
-
-def open_ojad(args):
-    browser = init_browser(args)
+def open_ojad(mode="default"):
+    browser = init_browser(mode=mode)
     base_url = "https://www.gavo.t.u-tokyo.ac.jp/ojad/phrasing/index"
     page = browser.get(base_url)
     return browser
-
-
-def wait_for_element(browser, By_what, trigger_string, kanji_string, timeout=15):
-    try:
-        element_loaded = EC.presence_of_element_located((By_what, trigger_string))
-        WebDriverWait(browser, timeout).until(element_loaded)
-
-    except TimeoutException:
-        print(f"Timed out on word {kanji_string}")
-
 
 def query_ojad(browser, kanji_string, timeout=5):
     # wait for text box to appear and then enter our kanji string into it

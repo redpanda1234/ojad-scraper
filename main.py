@@ -3,9 +3,10 @@ import shutil
 import genanki
 
 from ingest_data import *
-from scrape_ojad import *
-from scrape_tatoeba import *
+from scrapers.scrape_ojad import *
+from scrapers.scrape_tatoeba import *
 from genanki_templates import *
+from scrapers.scrape_jisho import get_words_meaning
 
 import os
 
@@ -14,6 +15,7 @@ import argparse
 
 def merge_dicts(dict1, dict2):
     """
+    merges dicts of dicts
     by default, assume dict2 is newer
     """
     new_dict = {}
@@ -28,7 +30,7 @@ def merge_dicts(dict1, dict2):
 
     return new_dict
 
-
+# TODO: I don't think these functions would work if, say we generated the json with pitch data then wanted to add the rei
 def get_no_pitch_words(word_data, words):
     no_pitch_words = set()
     for word in words:
@@ -38,7 +40,6 @@ def get_no_pitch_words(word_data, words):
             no_pitch_words.add(word)
     return no_pitch_words
 
-
 def get_no_rei_words(word_data, words):
     no_rei_words = set()
     for word in words:
@@ -47,6 +48,13 @@ def get_no_rei_words(word_data, words):
         ):
             no_rei_words.add(word)
     return no_rei_words
+
+def get_no_meaning_words(word_data, words):
+    no_meaning_words = set()
+    for word in words:
+        if word not in word_data or ("meaning" not in word_data[word].keys()):
+            no_meaning_words.add(word)
+    return no_meaning_words
 
 def generate_jisho_links(kanji_list):
     """
@@ -67,7 +75,12 @@ def check_paths_exist():
         os.mkdir("./apkgs")
 
 def make_core_deck(lesson, anki_ids, tango_by_lesson, args):
-    browser = open_ojad(args)
+    mode = "default"
+    if args.z:
+        mode = "alt"
+    if args.head:
+        mode = "headed"
+    browser = open_ojad(mode=mode)
     try:
         lnum, lsec = lesson.split("-")
     except ValueError as e:
@@ -97,6 +110,7 @@ def make_core_deck(lesson, anki_ids, tango_by_lesson, args):
 
     needs_pitch = get_no_pitch_words(word_data, words)
     needs_rei = get_no_rei_words(word_data, words)
+    needs_meanings = get_no_meaning_words(word_data, words)
 
     print(needs_pitch)
     if needs_pitch:
@@ -118,6 +132,15 @@ def make_core_deck(lesson, anki_ids, tango_by_lesson, args):
         print("fetching example data...")
         rei_data = get_words_rei(browser, needs_rei)
         word_data = merge_dicts(word_data, rei_data)
+    if needs_meanings:
+        print("\n")
+        print(70 * "-")
+        print(f"{len(needs_rei)} words need example sentences:")
+        for word in needs_meanings:
+            print(word)
+        print("fetching example data...")
+        meanings_data = get_words_meaning(browser, needs_meanings)
+        word_data = merge_dicts(word_data, meanings_data)
 
     # Backup data before overwrite
     if not no_preexisting_json:
@@ -142,6 +165,7 @@ def make_core_deck(lesson, anki_ids, tango_by_lesson, args):
             word_data[word]["audio path"],
             word_data[word]["transcript"],
         )
+        kanji_meaning = word_data[word]["meaning"]
         # print(pitch_reading)
 
         word_note = genanki.Note(
@@ -150,7 +174,7 @@ def make_core_deck(lesson, anki_ids, tango_by_lesson, args):
                 reading,
                 english,
                 transcript,  # example sentence w/ furigana from tatoeba
-                "",  # kanji meaning support might come later
+                kanji_meaning,  # kanji meaning support might come later
                 "",  # part of speech support might come later
                 pitch_curve_data,  # pitch curve data
                 pitch_reading,  # pitch curve reading
@@ -243,6 +267,7 @@ def clean():
 def parse():
     parser = argparse.ArgumentParser()
     parser.add_argument('-z', action="store_true",help="run in experimental mode")
+    parser.add_argument('--head', action="store_true",help="run with browser in headed mode")
     parser.add_argument('--lesson_index', nargs="*", type=int, help="indices of the lessons to collect")
     parser.add_argument('--clean', action="store_true", help="removes .apkg, .pkl, and .pkl.bak files")
     parser.add_argument('--generate', action="store_true", help="run main and generate files")
