@@ -135,9 +135,14 @@ def get_words_pitch(browser, words, timeout=5):
         ).get_attribute("outerHTML")
 
         matched = check_reading_matches(pitch_reading, kana)
+        # Default to using kana in case where kanji reading didn't
+        # yield the expected result
         if not matched and kanji:
             print(f"Kanji: {kanji}\n")
-            continue
+            word_data = query_ojad(browser, kana, timeout=timeout)
+            pitch_reading = word_data.find_element(
+                By.CLASS_NAME, "phrasing_text"
+            ).get_attribute("outerHTML")
 
         pitch_curve_full = word_data.find_element(
             By.XPATH, f"//*[contains(text(), 'set_accent_curve_phrase')]"

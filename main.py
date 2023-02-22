@@ -54,7 +54,7 @@ def main():
     anki_ids = get_anki_ids(lesson_names)
 
     # Start the first 34 lesson sections
-    lessons = lesson_names[0:34]
+    lessons = lesson_names[0:50]
     for lesson in lessons:
         browser = open_ojad()
         print("\n\n\n")
@@ -68,7 +68,9 @@ def main():
             raise e
 
         lesson_deck_id = anki_ids[lesson]
-        lesson_deck = genanki.Deck(lesson_deck_id, f"Automated-OJAD::{lnum}::{lsec}")
+        lesson_deck = genanki.Deck(
+            lesson_deck_id, f"Japanese::Automated-OJAD::{lnum}::{lsec}"
+        )
 
         words = tango_by_lesson[lnum][lsec]
 
