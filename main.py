@@ -135,10 +135,10 @@ def make_core_deck(lesson, anki_ids, tango_by_lesson, args):
     if needs_meanings:
         print("\n")
         print(70 * "-")
-        print(f"{len(needs_rei)} words need example sentences:")
+        print(f"{len(needs_rei)} words need kanji lookups")
         for word in needs_meanings:
             print(word)
-        print("fetching example data...")
+        print("fetching kanji data...")
         meanings_data = get_words_meaning(browser, needs_meanings)
         word_data = merge_dicts(word_data, meanings_data)
 
@@ -240,7 +240,7 @@ def main(args):
         # lesson number and the section (e.g. 会話１) within that lesson
         if args.core:
             make_core_deck(lesson, anki_ids, tango_by_lesson, args)
-        elif args.kanji:
+        if args.kanji:
             make_kanji_deck(lesson, anki_ids_kanji, tango_by_lesson, args)
 
 def clean():

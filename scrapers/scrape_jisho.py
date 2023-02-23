@@ -1,5 +1,5 @@
 from selenium.webdriver.common.by import By
-
+from IPython import embed
 from tqdm import tqdm as tqdm
 
 import ingest_data # What have I just wrought upon this unholy land
@@ -9,22 +9,33 @@ def query_jisho(browser, kanji):
     prefix = r"https://jisho.org/search/"
     suffix = r"%23kanji"
     browser.get(f"{prefix}{kanji}{suffix}")
+    browser_setup.wait_for_element(browser, By.CLASS_NAME, "kanji-details__main-readings", kanji)
+    browser_setup.wait_for_element(browser, By.CLASS_NAME, "kanji-details__main-meanings", kanji)
     return browser
 
 def get_kanji_data(browser):
     meanings = browser.find_element(By.CLASS_NAME, "kanji-details__main-meanings")
     meanings = meanings.get_attribute("innerHTML")
+    # meanings = meanings.split(":")[1]
 
+    # important to note that not all  kanji will have both kun and on yomi
     readings = browser.find_element(By.CLASS_NAME, "kanji-details__main-readings")
-
-    kun_entry = readings.find_element(By.CLASS_NAME, "kun_yomi")
-    kun_list = kun_entry.find_element(By.CLASS_NAME, 'kanji-details__main-readings-list')
-    kun_yomi = kun_list.text.strip()
-
-    on_entry = readings.find_element(By.CLASS_NAME, "on_yomi")
-    on_list = on_entry.find_element(By.CLASS_NAME, 'kanji-details__main-readings-list')
-    on_yomi = on_list.text.strip()
-    return meanings.strip(), kun_yomi, on_yomi
+    readings = readings.text.split("\n") # splits between the on and kun yomi
+    yomi = {}
+    yomi["kun"] = ""
+    yomi["on"] = ""
+    for read in readings:
+        if read[:3] == "Kun":
+            yomi["kun"] = read[5:]
+        elif read[:2] == "On":
+            yomi["On"] = read[4:]
+    # kun_entry = readings.find_element(By.CLASS_NAME, "kun_yomi")
+    # kun_list = kun_entry.find_element(By.CLASS_NAME, 'kanji-details__main-readings-list')
+    # kun_yomi = kun_list.text.strip()
+    # on_entry = readings.find_element(By.CLASS_NAME, "on_yomi")
+    # on_list = on_entry.find_element(By.CLASS_NAME, 'kanji-details__main-readings-list')
+    # on_yomi = on_list.text.strip()
+    return meanings.strip(), yomi["kun"], yomi["on"] 
 
 def split_kanji_data(kanji_data):
     """
@@ -57,11 +68,14 @@ def get_words_meaning(browser, words, timeout=10):
             word_dict[word] = {"meaning": meaning_string}
         else:
             word_dict[word] = {"meaning": ""}
+    return word_dict
 
 if __name__ == "__main__":
+    # python -m scrapers.scrape_jisho
     browser = browser_setup.init_browser(mode="headed")
     test_kanji = "会"
     browser = query_jisho(browser, test_kanji)
+    embed()
     meanings = get_kanji_data(browser)
     browser.close()
     print(meanings)

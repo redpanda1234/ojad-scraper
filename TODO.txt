@@ -1,0 +1,15 @@
+General:
+    - Fix the command line flags
+    - Fix the README
+
+Kanji Deck:
+    - We have the crude skeleton of what a deck might look like, and the lookup functionality, just put them together
+    - Design a nice card layout pattern or figure out how to repurpose the one we have
+
+Pitch:
+    # I'm not a big user of the pitch display, so I'm not certain what needs to be done there
+
+Web integration
+    - Figure out the steps for web integration (with Yomi-Chan)
+
+general code cleaning and maintenance
