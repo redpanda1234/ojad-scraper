@@ -21,14 +21,15 @@ def get_kanji_data(browser):
     # important to note that not all  kanji will have both kun and on yomi
     readings = browser.find_element(By.CLASS_NAME, "kanji-details__main-readings")
     readings = readings.text.split("\n") # splits between the on and kun yomi
+    print(readings)
     yomi = {}
     yomi["kun"] = ""
     yomi["on"] = ""
     for read in readings:
-        if read[:3] == "Kun":
+        if read[:3].lower() == "kun":
             yomi["kun"] = read[5:]
-        elif read[:2] == "On":
-            yomi["On"] = read[4:]
+        elif read[:2].lower() == "on":
+            yomi["on"] = read[4:]
     # kun_entry = readings.find_element(By.CLASS_NAME, "kun_yomi")
     # kun_list = kun_entry.find_element(By.CLASS_NAME, 'kanji-details__main-readings-list')
     # kun_yomi = kun_list.text.strip()

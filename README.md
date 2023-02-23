@@ -9,8 +9,8 @@ run the script with
     python main.py -h
 to learn more. Two handy commands are
 
-    python main.py --head --generate --core
-to generate the core study deck and
+    python main.py --core --kanji
+to generate both currently enabled decks
 
     python main.py --clean 
 to clear out all generated decks

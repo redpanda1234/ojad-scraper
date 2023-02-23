@@ -7,6 +7,8 @@ from scrapers.scrape_ojad import *
 from scrapers.scrape_tatoeba import *
 from genanki_templates import *
 from scrapers.scrape_jisho import get_words_meaning
+import scrapers.scrape_jisho as scrape_jisho
+import scrapers.browser_setup as browser_setup
 
 import os
 
@@ -62,7 +64,7 @@ def generate_jisho_links(kanji_list):
     """
     s = ""
     for kanji in kanji_list:
-        s += f"https://jisho.org/search{kanji}%23kanji\n"
+        s += f"https://jisho.org/search/{kanji}%23kanji\n"
     s = s[:-1]
     return s
 
@@ -75,12 +77,7 @@ def check_paths_exist():
         os.mkdir("./apkgs")
 
 def make_core_deck(lesson, anki_ids, tango_by_lesson, args):
-    mode = "default"
-    if args.z:
-        mode = "alt"
-    if args.head:
-        mode = "headed"
-    browser = open_ojad(mode=mode)
+    browser = open_ojad(mode=args.browser_mode)
     try:
         lnum, lsec = lesson.split("-")
     except ValueError as e:
@@ -188,6 +185,7 @@ def make_core_deck(lesson, anki_ids, tango_by_lesson, args):
     genanki.Package(lesson_deck).write_to_file(f"./apkgs/{lesson}.apkg")
 
 def make_kanji_deck(lesson, anki_ids_kanji, tango_by_lesson, args):
+    browser = browser_setup.init_browser(args.browser_mode)
     try:
         lnum, lsec = lesson.split("-")
     except ValueError as e:
@@ -199,19 +197,33 @@ def make_kanji_deck(lesson, anki_ids_kanji, tango_by_lesson, args):
 
     for word in words:
         kana, kanji, english, lesson_tag = word
+        kanji_list = get_kanji(kanji)
+        jisho_links = generate_jisho_links(kanji_list)
+        jisho_links = jisho_links.split("\n")
         if kanji:
-            for k in get_kanji(kanji):
+            for k,j in zip(kanji_list, jisho_links):
+                scrape_jisho.query_jisho(browser, k)
+                meaning, kun, on = scrape_jisho.get_kanji_data(browser)
+                print(meaning)
+                print(kun)
+                print(on)
                 kanji_note = genanki.Note(
-                    model=automated_kanji_model,
+                    model=automated_ojad_model,
                     fields=[
                         k,
-                        "", # kun readings
-                        "", # on readings
-                        "", # example words
-                        "", # example sentences
-                    ]
+                        f"kun: {kun}\non: {on}",  # 
+                        "",  # example sentence w/ furigana from tatoeba
+                        meaning,  # kanji meaning support might come later
+                        "",  # part of speech support might come later
+                        "",  # pitch curve data
+                        "",  # pitch curve reading
+                        "" + j,  # special notes
+                        lesson,
+                        "",  # example sentence audio
+                        "",  # front sound
+                    ],
                 )
-        lesson_deck.add_note(kanji_note)
+                lesson_deck.add_note(kanji_note)
     genanki.Package(lesson_deck.write_to_file(f"./apkgs/{lesson}_kanji.apkg"))
 
 def main(args):
@@ -267,10 +279,12 @@ def clean():
 def parse():
     parser = argparse.ArgumentParser()
     parser.add_argument('-z', action="store_true",help="run in experimental mode")
-    parser.add_argument('--head', action="store_true",help="run with browser in headed mode")
+    parser.add_argument(
+        '-b', '--browser_mode', default="default", choices=["default", "standard", "headed"], 
+        help="what mode to run the web browser in. Options are default, standard, or headed",
+        )
     parser.add_argument('--lesson_index', nargs="*", type=int, help="indices of the lessons to collect")
     parser.add_argument('--clean', action="store_true", help="removes .apkg, .pkl, and .pkl.bak files")
-    parser.add_argument('--generate', action="store_true", help="run main and generate files")
     parser.add_argument('--core', action="store_true", help="generate core decks")
     parser.add_argument('--kanji', action="store_true", help="generate additional kanji decks")
     parser.add_argument('--debug', action="store_true", help="turns on printing for just about everything")
@@ -279,9 +293,10 @@ def parse():
 
 if __name__ == "__main__":
     args = parse()
+    print(args.browser_mode)
     if args.debug:
         print(args)
     if args.clean:
         clean()
-    if args.generate:
+    if args.core or args.kanji:
         main(args)

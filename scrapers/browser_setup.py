@@ -27,7 +27,7 @@ def init_browser(mode="default"):
             firefox_profile=fp,
             options=options,
         )
-    elif mode == "alt":
+    elif mode == "standard":
         options.add_argument("--headless")
         browser = webdriver.Firefox(
             options=options,
